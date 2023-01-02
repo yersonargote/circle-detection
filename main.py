@@ -51,10 +51,10 @@ class CircleDetection:
         (xi, yi), (xj, yj), (xk, yk) = self.select_coords()
 
         # Calculate x0 and y0
-        xjyj = xj**2 + yj**2
-        xiyi = xi**2 + yi**2
+        xjyj = np.square(xj) + np.square(yj)
+        xiyi = np.square(xi) + np.square(yi)
         yjyi = yj - yi
-        xkyk = xk**2 + yk**2
+        xkyk = np.square(xk) + np.square(yk)
         ykyi = yk - yi
         xjxi = xj - xi
         xkxi = xk - xi
@@ -180,6 +180,7 @@ def show(circles: np.ndarray, edges: np.ndarray, cimg: np.ndarray):
     fig.set_size_inches(16, 9)
 
     circles = np.uint16(np.around(circles))
+
     for circle in circles:
         x0, y0, r = circle
         cv.circle(cimg, (x0, y0), r, (255, 0, 0), 2)
@@ -201,13 +202,17 @@ def show(circles: np.ndarray, edges: np.ndarray, cimg: np.ndarray):
 
 def main():
     np.random.seed(42)
-    filename = "4.jpg"
+    filename = "2.jpg"
     edges = canny(filename)
     img, cimg = get_img(filename)
     name = "Circle Detection"
-    size, N, min_radius = 3, 20, 70
+    size, N, min_radius = 3, 100, 70
     problem: CircleDetection = CircleDetection(
-        name=name, size=size, min_radius=min_radius, edges=edges, img=cimg
+        name=name,
+        size=size,
+        min_radius=min_radius,
+        edges=edges,
+        img=cimg,
     )
 
     gwo: GWO = GWO(
@@ -230,7 +235,14 @@ def main():
     # Hough Circle Transform
     start_time = time.perf_counter()
     circles = cv.HoughCircles(
-        img, cv.HOUGH_GRADIENT, 1, 20, param1=50, param2=30, minRadius=0, maxRadius=0
+        img,
+        cv.HOUGH_GRADIENT,
+        1,
+        20,
+        param1=50,
+        param2=30,
+        minRadius=0,
+        maxRadius=0,
     )
     end_time = time.perf_counter()
     circle = circles[0, 0]
@@ -240,10 +252,12 @@ def main():
     # Comparing
     print(f"GWO: {best}")
     print(f"Time GWO: {time_gwo}")
-    show(np.array([best.cells]), np.copy(edges), np.copy(cimg))
     print(f"HCT: {other}")
     print(f"Time HCT: {time_hct}")
-    show(np.array([other.cells]), edges, cimg)
+    solutions = [solution.cells for solution in gwo.population]
+    show(np.array(solutions), np.copy(edges), np.copy(cimg))
+    show(np.array(circles[0, :]), np.copy(edges), np.copy(cimg))
+    show(np.array([best.cells, other.cells]), np.copy(edges), np.copy(cimg))
     plt.show()
 
 
