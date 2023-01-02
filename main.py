@@ -13,6 +13,7 @@ from dataclasses import dataclass
 
 import cv2 as cv
 import numpy as np
+import typer
 from matplotlib import pyplot as plt
 
 # %matplotlib inline
@@ -200,9 +201,9 @@ def show(circles: np.ndarray, edges: np.ndarray, cimg: np.ndarray):
     ax2.set_ylabel("Y axis")
 
 
-def main():
+def main(name: str = typer.Argument("2")):
     np.random.seed(42)
-    filename = "2.jpg"
+    filename = f"{name}.jpg"
     edges = canny(filename)
     img, cimg = get_img(filename)
     name = "Circle Detection"
@@ -262,4 +263,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    typer.run(main)
