@@ -56,17 +56,20 @@ class GWO:
             self.population[i].fitness = self.problem.evaluate(self.population[i].cells)
 
     def solve(self):
-        self.population = np.array(sorted([self.init_wolf() for _ in range(self.N)]))
+        self.population = np.array(
+            sorted([self.init_wolf() for _ in range(self.N)], reverse=False)
+        )
         best = self.population[0]
+        self.update_alpha_beta_delta()
         it = 0
         while it < self.max_iterations:
             self.a = 2 - it * ((2) / self.max_iterations)
-            self.update_alpha_beta_delta()
             self.update_population()
             self.population = np.array(sorted(self.population, reverse=False))
+            self.update_alpha_beta_delta()
             it += 1
             if self.alpha < best:
                 best = self.alpha
-        if self.alpha < best:
-            best = self.alpha
+            if best.fitness == self.problem.optimal:
+                return best
         return best

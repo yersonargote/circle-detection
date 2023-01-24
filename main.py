@@ -59,6 +59,29 @@ def show(circles: np.ndarray, edges: np.ndarray, cimg: np.ndarray):
     ax2.set_ylabel("Y axis")
 
 
+def show_ind(solutions: dict, img: np.ndarray):
+    fig, axs = plt.subplots(2, 2, figsize=(16, 9))
+    fig.tight_layout(pad=5.0)
+
+    colors = [(255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 0)]
+    it = 0
+    for name, (solution, _) in solutions.items():
+        circle = np.uint16(np.around(solution.cells))
+        x0, y0, r = circle
+        color = colors[it % len(colors)]
+        cimg = np.copy(img)
+        cv.circle(cimg, (x0, y0), r, color, 2)
+        cv.circle(cimg, (x0, y0), 2, color, 3)
+
+        axs[it // 2][it % 2].imshow(cimg)
+        axs[it // 2][it % 2].set_title(
+            f"{name} | Fitness: {solution.fitness} | Circle {solution.cells}"
+        )
+        axs[it // 2][it % 2].set_xlabel("X axis")
+        axs[it // 2][it % 2].set_ylabel("Y axis")
+        it += 1
+
+
 def main(name: str = typer.Argument("2")):
     np.random.seed(42)
     random.seed(42)
@@ -68,13 +91,14 @@ def main(name: str = typer.Argument("2")):
     img, cimg = get_img(filename)
     name = "Circle Detection"
     size, N = (3, 100)
-    min_radius, max_radius = (70, 100)
-    max_iterations = 100
+    min_radius, max_radius = (50, 100)
+    max_iterations, optimal = (100, 0)
     problem: CircleDetection = CircleDetection(
         name=name,
         size=size,
         min_radius=min_radius,
         max_radius=max_radius,
+        optimal=optimal,
         edges=edges,
         img=cimg,
     )
@@ -118,7 +142,7 @@ def main(name: str = typer.Argument("2")):
     solutions["HCT"] = (best, end_time - start_time)
 
     # Global-Harmony Search
-    N, HMCR, PAR = 20, 0.9, 0.3
+    HMCR, PAR = 0.9, 0.3
     ghs: GHS = GHS(
         problem=problem,
         max_iterations=max_iterations,
@@ -156,6 +180,7 @@ def main(name: str = typer.Argument("2")):
         np.copy(edges),
         np.copy(cimg),
     )
+    show_ind(solutions, np.copy(cimg))
     plt.show()
 
 

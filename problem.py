@@ -10,6 +10,7 @@ class CircleDetection:
     size: int
     min_radius: int
     max_radius: int
+    optimal: int
     edges: np.ndarray
     img: np.ndarray
 
@@ -67,9 +68,12 @@ class CircleDetection:
             x = int(x0 + r * np.cos(theta))
             y = int(y0 + r * np.sin(theta))
             if 0 < x < self.edges.shape[0] and 0 < y < self.edges.shape[1]:
-                values = self.edges[x - 5 : x + 6, y - 5 : y + 6]
+                values = self.edges[x - 2 : x + 3, y - 2 : y + 3]
+                # values = self.edges[x - 5 : x + 6, y - 5 : y + 6]
                 edges = np.count_nonzero(values == 255)
                 if edges > 0:
                     points += 1
+                # if self.edges[x][y] == 255:
+                #     points += 1
         error = 1 - (points / perimeter)
         return error
