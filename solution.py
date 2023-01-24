@@ -7,3 +7,12 @@ import numpy as np
 class Solution:
     cells: np.ndarray
     fitness: float
+
+    def __lt__(self, other):
+        return self.fitness < other.fitness
+
+    def __ge__(self, other):
+        return self.fitness > other.fitness
+
+    def __eq__(self, other):
+        return self.fitness == other.fitness

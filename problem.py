@@ -1,3 +1,4 @@
+import random
 from dataclasses import dataclass
 
 import numpy as np
@@ -8,29 +9,26 @@ class CircleDetection:
     name: str
     size: int
     min_radius: int
+    max_radius: int
     edges: np.ndarray
     img: np.ndarray
 
     def select_coords(self):
-        # Generate a NumPy array to store the coordinates of the three points
-        coords = np.empty((3, 2))
-
-        # Generate the three points
+        coords = np.array(np.where(self.edges == 255)).T
         while True:
-            # Select three random points that have a non-zero value
-            coords[:, 0] = np.random.choice(np.nonzero(self.edges)[0], 3, replace=False)
-            coords[:, 1] = np.random.choice(np.nonzero(self.edges)[1], 3, replace=False)
-
-            # Calculate the cross product of the vectors formed by the three points
-            cross_product = (coords[1, 0] - coords[0, 0]) * (
-                coords[2, 1] - coords[0, 1]
-            ) - (coords[2, 0] - coords[0, 0]) * (coords[1, 1] - coords[0, 1])
-
-            # If the cross product is not equal to zero,
-            # then the points are non-collinear
-            if not np.isclose(cross_product, 0):
+            i, j, k = random.sample(list(range(len(coords))), 3)
+            (xi, yi), (xj, yj), (xk, yk) = coords[i], coords[j], coords[k]
+            matrix = np.array(
+                [
+                    [1, xi, yi],
+                    [1, xj, yj],
+                    [1, xk, yk],
+                ]
+            )
+            det = np.linalg.det(matrix)
+            if det != 0:
                 break
-        return coords
+        return (xi, yi), (xj, yj), (xk, yk)
 
     def circle(self):
         # Init individual
@@ -53,14 +51,14 @@ class CircleDetection:
         y0 = n2 // d
 
         # Calculate the radius of the circle
-        r = np.int64(np.sqrt((x0 - xi) ** 2 + (y0 - yi) ** 2))
+        r = np.around(np.sqrt((x0 - xi) ** 2 + (y0 - yi) ** 2))
         circle = np.array([x0, y0, r])
         return circle
 
     def evaluate(self, cells: np.ndarray) -> float:
         error = 1
         x0, y0, r = cells
-        if r < self.min_radius:
+        if r < self.min_radius or r > self.max_radius:
             return error
         circumference = np.arange(0, (2 * np.pi) + 0.1, 0.1)
         perimeter = circumference.size
@@ -69,9 +67,9 @@ class CircleDetection:
             x = int(x0 + r * np.cos(theta))
             y = int(y0 + r * np.sin(theta))
             if 0 < x < self.edges.shape[0] and 0 < y < self.edges.shape[1]:
-                if self.edges[x, y] == 255:
+                values = self.edges[x - 5 : x + 6, y - 5 : y + 6]
+                edges = np.count_nonzero(values == 255)
+                if edges > 0:
                     points += 1
-            else:
-                points -= 1
         error = 1 - (points / perimeter)
         return error

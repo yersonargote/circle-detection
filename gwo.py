@@ -26,7 +26,7 @@ class GWO:
 
     def update_alpha_beta_delta(self):
         self.population = np.array(
-            sorted(self.population, key=lambda x: x.fitness, reverse=False),
+            sorted(self.population, reverse=False),
             dtype=object,
         )
         self.alpha = self.population[0]
@@ -56,7 +56,7 @@ class GWO:
             D_delta = np.abs(C3 * self.delta.cells - self.population[i].cells)
             X3 = self.delta.cells - A3 * D_delta
 
-            self.population[i].cells = np.around((X1 + X2 + X3) / 3)
+            self.population[i].cells = np.around(X1 + X2 + X3 / 3)
             self.population[i].fitness = self.problem.evaluate(self.population[i].cells)
 
     def solve(self):
