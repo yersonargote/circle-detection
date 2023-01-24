@@ -25,10 +25,6 @@ class GWO:
         return Solution(cells=cells, fitness=fitness)
 
     def update_alpha_beta_delta(self):
-        self.population = np.array(
-            sorted(self.population, reverse=False),
-            dtype=object,
-        )
         self.alpha = self.population[0]
         self.beta = self.population[1]
         self.delta = self.population[2]
@@ -60,13 +56,17 @@ class GWO:
             self.population[i].fitness = self.problem.evaluate(self.population[i].cells)
 
     def solve(self):
-        self.population = np.array([self.init_wolf() for _ in range(self.N)])
+        self.population = np.array(sorted([self.init_wolf() for _ in range(self.N)]))
+        best = self.population[0]
         it = 0
         while it < self.max_iterations:
             self.a = 2 - it * ((2) / self.max_iterations)
             self.update_alpha_beta_delta()
             self.update_population()
+            self.population = np.array(sorted(self.population, reverse=False))
             it += 1
-        self.update_alpha_beta_delta()
-
-        return self.alpha
+            if self.alpha < best:
+                best = self.alpha
+        if self.alpha < best:
+            best = self.alpha
+        return best

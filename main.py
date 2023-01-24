@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """GWO-CircleDetection.ipynb"""
 
+import random
 import time
 
 import cv2 as cv
@@ -9,6 +10,7 @@ import typer
 from matplotlib import pyplot as plt
 from rich import print
 
+from ga import GA
 from ghs import GHS
 from gwo import GWO
 from problem import CircleDetection
@@ -59,6 +61,7 @@ def show(circles: np.ndarray, edges: np.ndarray, cimg: np.ndarray):
 
 def main(name: str = typer.Argument("2")):
     np.random.seed(42)
+    random.seed(42)
     solutions = {}
     filename = f"{name}.jpg"
     edges = canny(filename)
@@ -128,6 +131,19 @@ def main(name: str = typer.Argument("2")):
     best = ghs.solve()
     end = time.perf_counter()
     solutions["GHS"] = (best, end - start)
+
+    # GA
+    ga = GA(
+        N=N,
+        generations=max_iterations,
+        problem=problem,
+        population=np.empty(shape=N, dtype=object),
+        opponents=2,
+    )
+    start = time.perf_counter()
+    best = ga.solve()
+    end = time.perf_counter()
+    solutions["GA"] = (best, end - start)
 
     # Benchmarking
     for name, (best, tme) in solutions.items():

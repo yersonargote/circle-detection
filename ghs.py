@@ -15,7 +15,7 @@ class GHS:
     HMCR: float
     PAR: float
 
-    def init_wolf(self):
+    def init_harmony(self):
         cells = self.problem.circle()
         fitness = self.problem.evaluate(cells)
         return Solution(cells=cells, fitness=fitness)
@@ -26,7 +26,7 @@ class GHS:
             self.memory = np.array(sorted(self.memory, reverse=False))
 
     def solve(self) -> Solution:
-        self.memory = np.array([self.init_wolf() for _ in range(self.N)])
+        self.memory = np.array([self.init_harmony() for _ in range(self.N)])
         self.memory = np.array(sorted(self.memory, reverse=False))
         for _ in range(self.max_iterations):
             cells = np.zeros(self.problem.size)
