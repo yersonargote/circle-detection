@@ -28,6 +28,7 @@ class GHS:
     def solve(self) -> Solution:
         self.memory = np.array([self.init_harmony() for _ in range(self.N)])
         self.memory = np.array(sorted(self.memory, reverse=False))
+        best: Solution = self.memory[0]
         for _ in range(self.max_iterations):
             cells = np.zeros(self.problem.size)
             for j in range(self.problem.size):
@@ -43,4 +44,8 @@ class GHS:
             fitness = self.problem.evaluate(cells=cells)
             solution = Solution(cells=cells, fitness=fitness)
             self.update_memory(solution)
+            if self.memory[0] < best:
+                best = self.memory[0]
+            if best.fitness == self.problem.optimal:
+                return best
         return self.memory[0]

@@ -90,5 +90,7 @@ class GA:
             self.replace(population)
             if self.population[0] < best:
                 best = self.population[0]
+            if best.fitness == self.problem.optimal:
+                return best
             generation += 1
         return best
