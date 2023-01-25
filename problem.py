@@ -46,10 +46,10 @@ class CircleDetection:
 
         n1 = ((xjyj - xiyi) * (2 * ykyi)) - ((xkyk - xiyi) * (2 * yjyi))
         d = 4 * ((xjxi * ykyi) - (xkxi * yjyi))
-        x0 = n1 // d
+        x0 = np.around(n1 / d)
 
         n2 = (2 * xjxi * (xkyk - xiyi)) - (2 * xkxi * (xjyj - xiyi))
-        y0 = n2 // d
+        y0 = np.around(n2 / d)
 
         # Calculate the radius of the circle
         r = np.around(np.sqrt((x0 - xi) ** 2 + (y0 - yi) ** 2))
@@ -68,8 +68,8 @@ class CircleDetection:
             x = int(x0 + r * np.cos(theta))
             y = int(y0 + r * np.sin(theta))
             if 0 < x < self.edges.shape[0] and 0 < y < self.edges.shape[1]:
-                values = self.edges[x - 2 : x + 3, y - 2 : y + 3]
-                # values = self.edges[x - 5 : x + 6, y - 5 : y + 6]
+                # values = self.edges[x - 1 : x + 2, y - 1 : y + 2]
+                values = self.edges[x - 3 : x + 4, y - 3 : y + 4]
                 edges = np.count_nonzero(values == 255)
                 if edges > 0:
                     points += 1

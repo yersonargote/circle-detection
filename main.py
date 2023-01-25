@@ -35,7 +35,7 @@ def show(circles: np.ndarray, edges: np.ndarray, cimg: np.ndarray):
     fig, (ax1, ax2) = plt.subplots(1, 2)
     fig.set_size_inches(16, 9)
 
-    circles = np.uint16(np.around(circles))
+    circles = np.uint16(circles)
 
     colors = [(255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 0)]
     for i, circle in enumerate(circles):
@@ -66,7 +66,7 @@ def show_ind(solutions: dict, img: np.ndarray):
     colors = [(255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 0)]
     it = 0
     for name, (solution, t) in solutions.items():
-        circle = np.uint16(np.around(solution.cells))
+        circle = np.uint16(solution.cells)
         x0, y0, r = circle
         color = colors[it % len(colors)]
         cimg = np.copy(img)

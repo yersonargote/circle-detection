@@ -52,7 +52,7 @@ class GWO:
             D_delta = np.abs(C3 * self.delta.cells - self.population[i].cells)
             X3 = self.delta.cells - A3 * D_delta
 
-            self.population[i].cells = np.around(X1 + X2 + X3 / 3)
+            self.population[i].cells = np.around((X1 + X2 + X3) / 3)
             self.population[i].fitness = self.problem.evaluate(self.population[i].cells)
 
     def solve(self):
