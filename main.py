@@ -65,7 +65,7 @@ def show_ind(solutions: dict, img: np.ndarray):
 
     colors = [(255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 0)]
     it = 0
-    for name, (solution, _) in solutions.items():
+    for name, (solution, t) in solutions.items():
         circle = np.uint16(np.around(solution.cells))
         x0, y0, r = circle
         color = colors[it % len(colors)]
@@ -75,7 +75,7 @@ def show_ind(solutions: dict, img: np.ndarray):
 
         axs[it // 2][it % 2].imshow(cimg)
         axs[it // 2][it % 2].set_title(
-            f"{name} | Fitness: {solution.fitness} | Circle {solution.cells}"
+            f"{name} | Fitness: {solution.fitness} | Circle {solution.cells} | Time {t}"
         )
         axs[it // 2][it % 2].set_xlabel("X axis")
         axs[it // 2][it % 2].set_ylabel("Y axis")
