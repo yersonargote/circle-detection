@@ -68,8 +68,8 @@ class CircleDetection:
         perimeter = circumference.size
         points = 0
         for theta in circumference:
-            x = int(x0 + r * np.cos(theta))
-            y = int(y0 + r * np.sin(theta))
+            x = np.int16(np.around(x0 + r * np.cos(theta)))
+            y = np.int16(np.around(y0 + r * np.sin(theta)))
             if 0 < x < self.edges.shape[0] and 0 < y < self.edges.shape[1]:
                 values = self.edges[x - 1 : x + 2, y - 1 : y + 2]
                 # values = self.edges[x - 3 : x + 4, y - 3 : y + 4]

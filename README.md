@@ -16,7 +16,7 @@ pip install -r requirements.txt
 python main.py
 ```
 
-***Note***: You can add the name of image without `.jpg`, by default read `2.jpg` img.
+***Note***: You can add the name of image *without* `.jpg`, by default read `2.jpg` img.
 
 ```bash
 python main.py 4
