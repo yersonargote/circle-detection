@@ -71,12 +71,12 @@ class CircleDetection:
             x = int(x0 + r * np.cos(theta))
             y = int(y0 + r * np.sin(theta))
             if 0 < x < self.edges.shape[0] and 0 < y < self.edges.shape[1]:
-                # values = self.edges[x - 1 : x + 2, y - 1 : y + 2]
-                values = self.edges[x - 3 : x + 4, y - 3 : y + 4]
+                values = self.edges[x - 1 : x + 2, y - 1 : y + 2]
+                # values = self.edges[x - 3 : x + 4, y - 3 : y + 4]
                 edges = np.count_nonzero(values == 255)
                 if edges > 0:
                     points += 1
                 # if self.edges[x][y] == 255:
-                # points += 1
+                #     points += 1
         error = 1 - (points / perimeter)
         return error

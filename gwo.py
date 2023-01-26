@@ -57,7 +57,10 @@ class GWO:
 
     def solve(self):
         self.population = np.array(
-            sorted([self.init_wolf() for _ in range(self.N)], reverse=False)
+            sorted(
+                [self.init_wolf() for _ in range(self.N)],
+                reverse=False,
+            )
         )
         best = self.population[0]
         self.update_alpha_beta_delta()
