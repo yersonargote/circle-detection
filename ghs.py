@@ -46,6 +46,6 @@ class GHS:
             self.update_memory(solution)
             if self.memory[0] < best:
                 best = self.memory[0]
-            if best.fitness == self.problem.optimal:
+            if np.isclose(best.fitness, self.problem.optimal):
                 return best
-        return self.memory[0]
+        return best

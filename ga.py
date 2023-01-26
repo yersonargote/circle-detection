@@ -79,7 +79,7 @@ class GA:
         best = self.population[0]
         generation = 1
         while generation < self.generations:
-            population = np.empty(shape=self.N, dtype=object)
+            population = np.empty(shape=self.N + self.N % 2, dtype=object)
             for i in range(0, self.N, 2):
                 dad, mom = self.selection()
                 first, second = self.cross(dad, mom)
@@ -90,7 +90,7 @@ class GA:
             self.replace(population)
             if self.population[0] < best:
                 best = self.population[0]
-            if best.fitness == self.problem.optimal:
+            if np.isclose(best.fitness, self.problem.optimal):
                 return best
             generation += 1
         return best

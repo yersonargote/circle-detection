@@ -1,4 +1,3 @@
-import random
 from dataclasses import dataclass
 
 import numpy as np
@@ -17,7 +16,11 @@ class CircleDetection:
     def select_coords(self):
         coords = np.array(np.where(self.edges == 255)).T
         while True:
-            i, j, k = random.sample(list(range(len(coords))), 3)
+            i, j, k = np.random.choice(
+                list(range(len(coords))),
+                size=(3,),
+                replace=False,
+            )
             (xi, yi), (xj, yj), (xk, yk) = coords[i], coords[j], coords[k]
             matrix = np.array(
                 [
@@ -74,6 +77,6 @@ class CircleDetection:
                 if edges > 0:
                     points += 1
                 # if self.edges[x][y] == 255:
-                #     points += 1
+                # points += 1
         error = 1 - (points / perimeter)
         return error

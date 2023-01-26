@@ -32,8 +32,7 @@ def get_img(filename: str):
 
 
 def show(circles: np.ndarray, edges: np.ndarray, cimg: np.ndarray):
-    fig, (ax1, ax2) = plt.subplots(1, 2)
-    fig.set_size_inches(16, 9)
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(19, 9))
 
     circles = np.uint16(circles)
 
@@ -90,9 +89,9 @@ def main(name: str = typer.Argument("2")):
     edges = canny(filename)
     img, cimg = get_img(filename)
     name = "Circle Detection"
-    size, N = (3, 100)
-    min_radius, max_radius = (50, 100)
-    max_iterations, optimal = (100, 0)
+    min_radius, max_radius = (50, 200)
+    optimal, size = (0, 3)
+    N, max_iterations = (7, 133)  # 32, 89  # 14, 111  # 12, 586
     problem: CircleDetection = CircleDetection(
         name=name,
         size=size,

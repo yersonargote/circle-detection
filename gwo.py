@@ -70,6 +70,6 @@ class GWO:
             it += 1
             if self.alpha < best:
                 best = self.alpha
-            if best.fitness == self.problem.optimal:
+            if np.isclose(best.fitness, self.problem.optimal):
                 return best
         return best
