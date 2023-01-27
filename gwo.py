@@ -27,9 +27,9 @@ class GWO:
         return Solution(cells=cells, fitness=fitness)
 
     def update_alpha_beta_delta(self):
-        self.alpha = deepcopy(self.population[0])
-        self.beta = deepcopy(self.population[1])
-        self.delta = deepcopy(self.population[2])
+        self.alpha = self.population[0]
+        self.beta = self.population[1]
+        self.delta = self.population[2]
 
     def update_population(self):
         for i in range(3, self.N):

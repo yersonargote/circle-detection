@@ -19,8 +19,8 @@ from solution import Solution
 
 def canny(filename: str):
     img = cv.imread(filename, 0)
-    # edges = cv.Canny(img, 50, 50)
-    edges = cv.Canny(img, 100, 200)
+    edges = cv.Canny(img, 50, 50)
+    # edges = cv.Canny(img, 100, 200)
     return edges
 
 
@@ -103,7 +103,7 @@ def main(name: str = typer.Argument("2")):
     name = "Circle Detection"
     min_radius, max_radius = (50, 150)
     optimal, size = (0.2, 3)
-    N, max_iterations = (100, 100)
+    N, max_iterations = (32, 89)
     # 20, 100  # 32, 89  # 14, 111 # (7, 133)  # 100, 100 # 12, 586
     problem: CircleDetection = CircleDetection(
         name=name,
