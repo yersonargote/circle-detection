@@ -19,8 +19,8 @@ from solution import Solution
 
 def canny(filename: str):
     img = cv.imread(filename, 0)
-    edges = cv.Canny(img, 50, 50)
-    # edges = cv.Canny(img, 100, 200)
+    # edges = cv.Canny(img, 50, 50)
+    edges = cv.Canny(img, 100, 200)
     return edges
 
 
@@ -64,7 +64,7 @@ def show_ind(solutions: dict, img: np.ndarray):
 
     colors = [(255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 0)]
     it = 0
-    for name, (solution, t) in solutions.items():
+    for name, (_, solution, t) in solutions.items():
         circle = np.uint16(solution.cells)
         x0, y0, r = circle
         color = colors[it % len(colors)]
@@ -81,6 +81,18 @@ def show_ind(solutions: dict, img: np.ndarray):
         it += 1
 
 
+def show_plt(solutions: dict):
+    figure, axes = plt.subplots()
+    axes.set_title("Circle Detection")
+    colors = ["green", "blue", "red", "yellow"]
+    it = 0
+    for name, values in solutions.items():
+        color = colors[it % len(colors)]
+        axes.plot(values[0], color=color, label=name)
+        it += 1
+    axes.legend(loc="best")
+
+
 def main(name: str = typer.Argument("2")):
     np.random.seed(42)
     random.seed(42)
@@ -89,9 +101,10 @@ def main(name: str = typer.Argument("2")):
     edges = canny(filename)
     img, cimg = get_img(filename)
     name = "Circle Detection"
-    min_radius, max_radius = (50, 200)
-    optimal, size = (0, 3)
-    N, max_iterations = 32, 89  # 14, 111 # (7, 133)  # 100, 100 # 12, 586
+    min_radius, max_radius = (50, 150)
+    optimal, size = (0.2, 3)
+    N, max_iterations = (100, 100)
+    # 20, 100  # 32, 89  # 14, 111 # (7, 133)  # 100, 100 # 12, 586
     problem: CircleDetection = CircleDetection(
         name=name,
         size=size,
@@ -115,9 +128,9 @@ def main(name: str = typer.Argument("2")):
 
     # Grey Wolf Optimizer
     start_time = time.perf_counter()
-    best = gwo.solve()
+    sols, best = gwo.solve()
     end_time = time.perf_counter()
-    solutions["GWO"] = (best, end_time - start_time)
+    solutions["GWO"] = (sols, best, end_time - start_time)
 
     # Hough Circle Transform
     start_time = time.perf_counter()
@@ -138,10 +151,13 @@ def main(name: str = typer.Argument("2")):
         cells=cells,
         fitness=problem.evaluate(cells),
     )
-    solutions["HCT"] = (best, end_time - start_time)
+    sols = np.array([])
+    solutions["HCT"] = (sols, best, end_time - start_time)
 
     # Global-Harmony Search
-    HMCR, PAR = 0.9, 0.3
+    # HMCR, PAR = 0.9, 0.3
+    HMCR, PAR = 0.7, 0.3
+    BW, BWmin, BWmax = 2, 1, 5
     ghs: GHS = GHS(
         problem=problem,
         max_iterations=max_iterations,
@@ -149,11 +165,14 @@ def main(name: str = typer.Argument("2")):
         N=N,
         HMCR=HMCR,
         PAR=PAR,
+        BW=BW,
+        BWmin=BWmin,
+        BWmax=BWmax,
     )
     start = time.perf_counter()
-    best = ghs.solve()
+    sols, best = ghs.solve()
     end = time.perf_counter()
-    solutions["GHS"] = (best, end - start)
+    solutions["GHS"] = (sols, best, end - start)
 
     # GA
     ga = GA(
@@ -164,22 +183,23 @@ def main(name: str = typer.Argument("2")):
         opponents=2,
     )
     start = time.perf_counter()
-    best = ga.solve()
+    sols, best = ga.solve()
     end = time.perf_counter()
-    solutions["GA"] = (best, end - start)
+    solutions["GA"] = (sols, best, end - start)
 
     # Benchmarking
-    for name, (best, tme) in solutions.items():
+    for name, (sols, best, tme) in solutions.items():
         print(f"{name} - Time: {tme}")
         valid = np.isclose(problem.evaluate(best.cells), best.fitness)
         print(f"Fitness: {best.fitness} - Valid: {valid}")
         print(f"{best.cells}")
     show(
-        np.array([solution[0].cells for solution in solutions.values()]),
+        np.array([solution[1].cells for solution in solutions.values()]),
         np.copy(edges),
         np.copy(cimg),
     )
     show_ind(solutions, np.copy(cimg))
+    show_plt(solutions)
     plt.show()
 
 

@@ -1,5 +1,6 @@
 from copy import deepcopy
 from dataclasses import dataclass
+from typing import Tuple, Union
 
 import numpy as np
 
@@ -31,7 +32,7 @@ class GWO:
         self.delta = deepcopy(self.population[2])
 
     def update_population(self):
-        for i in range(self.N):
+        for i in range(3, self.N):
             r1 = np.random.uniform(0, 1, self.problem.size)
             r2 = np.random.uniform(0, 2, self.problem.size)
             A1 = 2 * self.a * r1 - self.a
@@ -64,8 +65,9 @@ class GWO:
             )
         )
         self.update_alpha_beta_delta()
-        best = deepcopy(self.alpha)
+        best: Solution = deepcopy(self.alpha)
         it = 0
+        solutions = []
         while it < self.max_iterations:
             self.a = 2 - it * ((2) / self.max_iterations)
             self.update_population()
@@ -76,4 +78,5 @@ class GWO:
                 best = deepcopy(self.alpha)
             if np.isclose(best.fitness, self.problem.optimal):
                 return best
-        return best
+            solutions.append(best.fitness)
+        return np.array(solutions), best

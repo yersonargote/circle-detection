@@ -1,4 +1,5 @@
 # Genetic Algorithm
+from copy import deepcopy
 from dataclasses import dataclass
 from typing import Tuple
 
@@ -64,7 +65,9 @@ class GA:
     def mutation(self, chromosome: Solution) -> Solution:
         mut = np.random.uniform()
         if mut < 0.05:
-            chromosome.cells = self.problem.circle()
+            rnd = np.random.uniform()
+            mut = np.random.randint(0, self.problem.edges.shape[0])
+            chromosome.cells = np.around(chromosome.cells + rnd * mut)
             chromosome.fitness = self.problem.evaluate(chromosome.cells)
         return chromosome
 
@@ -72,12 +75,13 @@ class GA:
         all = np.concatenate((self.population, population))
         self.population = np.array(sorted(all, reverse=False)[: self.N], dtype=object)
 
-    def solve(self) -> Solution:
+    def solve(self):
         self.population = np.array(
             sorted([self.init_individual() for _ in range(self.N)])
         )
-        best = self.population[0]
+        best: Solution = deepcopy(self.population[0])
         generation = 1
+        solutions = []
         while generation < self.generations:
             population = np.empty(shape=self.N + self.N % 2, dtype=object)
             for i in range(0, self.N, 2):
@@ -89,8 +93,9 @@ class GA:
                 population[i + 1] = second
             self.replace(population)
             if self.population[0] < best:
-                best = self.population[0]
+                best = deepcopy(self.population[0])
             if np.isclose(best.fitness, self.problem.optimal):
                 return best
             generation += 1
-        return best
+            solutions.append(best.fitness)
+        return np.array(solutions), best
