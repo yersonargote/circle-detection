@@ -77,6 +77,6 @@ class GWO:
             if self.alpha < best:
                 best = deepcopy(self.alpha)
             if np.isclose(best.fitness, self.problem.optimal):
-                return best
+                return np.array(solutions), best
             solutions.append(best.fitness)
         return np.array(solutions), best
