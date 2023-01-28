@@ -49,11 +49,9 @@ class CircleDetection:
 
         n1 = ((xjyj - xiyi) * (2 * ykyi)) - ((xkyk - xiyi) * (2 * yjyi))
         d = 4 * ((xjxi * ykyi) - (xkxi * yjyi))
-        # x0 = np.around(n1 / d)
         x0 = n1 // d
 
         n2 = (2 * xjxi * (xkyk - xiyi)) - (2 * xkxi * (xjyj - xiyi))
-        # y0 = np.around(n2 / d)
         y0 = n2 // d
 
         # Calculate the radius of the circle
@@ -61,47 +59,7 @@ class CircleDetection:
         circle = np.array([x0, y0, r])
         return circle
 
-    # def evaluate(self, cells: np.ndarray) -> float:
-    #     x0, y0, r = cells
-    #     if r < self.min_radius or r > self.max_radius:
-    #         return 2
-    #     perimeter = int(2 * np.pi * r)
-    #     circumference = np.linspace(0, 2 * np.pi, perimeter)
-    #     perimeter_points = np.array(
-    #         [np.rint(x0 + r * np.cos(t)).astype(int) for t in circumference]
-    #     )
-    #     perimeter_points = np.stack(
-    #         (
-    #             perimeter_points,
-    #             np.rint(y0 + r * np.sin(circumference)).astype(int),
-    #         ),
-    #         axis=1,
-    #     )
-    #     perimeter_points = np.unique(
-    #         np.array([tuple(point) for point in perimeter_points]), axis=0
-    #     )
-    #     white_points = np.array(
-    #         [
-    #             point
-    #             for point in perimeter_points
-    #             if 0 < point[0] < self.edges.shape[0]
-    #             and 0 < point[1] < self.edges.shape[1]
-    #             and self.edges[tuple(point)]
-    #         ]
-    #     )
-    #     fitness = 1 - (white_points.shape[0] / perimeter_points.shape[0])
-    #     return fitness
-
     def evaluate(self, cells: np.ndarray) -> float:
-        # coords = np.stack((x, y), axis=1)
-        # points = [
-        #     (x, y)
-        #     for x, y in coords
-        #     if 0 < x < self.edges.shape[0]
-        #     and 0 < y < self.edges.shape[1]
-        #     and self.edges[x][y]
-        # ]
-        # points = len(points)
         error = 1
         x0, y0, r = cells
         if r < self.min_radius or r > self.max_radius:
