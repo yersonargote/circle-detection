@@ -75,7 +75,7 @@ class GA:
         all = np.concatenate((self.population, population))
         self.population = np.array(sorted(all, reverse=False)[: self.N], dtype=object)
 
-    def solve(self):
+    def solve(self) -> Tuple:
         self.population = np.array(
             sorted([self.init_individual() for _ in range(self.N)])
         )
