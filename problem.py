@@ -63,19 +63,48 @@ class CircleDetection:
         return circle
 
     def evaluate(self, cells: np.ndarray) -> float:
-        error = 1
         x0, y0, r = cells
         if r < self.min_radius or r > self.max_radius:
             return 2
-        points = 0
-        perimeter = self.circumference.size
-        x = np.int16(np.ceil(x0 + r * np.cos(self.circumference)))
-        y = np.int16(np.ceil(y0 + r * np.sin(self.circumference)))
-        for x, y in zip(x, y):
-            if 0 < x < self.edges.shape[0] and 0 < y < self.edges.shape[1]:
-                if self.edges[x][y] == 255:
-                    points += 1
-        if perimeter == 0:
-            return 2
-        error = 1 - (points / perimeter)
-        return error
+        perimeter_points = np.array(
+            [np.rint(x0 + r * np.cos(t)).astype(int) for t in self.circumference]
+        )
+        perimeter_points = np.stack(
+            (
+                perimeter_points,
+                np.rint(y0 + r * np.sin(self.circumference)).astype(int),
+            ),
+            axis=1,
+        )
+        perimeter_points = np.unique(
+            np.array([tuple(point) for point in perimeter_points]), axis=0
+        )
+        white_points = np.array(
+            [
+                point
+                for point in perimeter_points
+                if 0 < point[0] < self.edges.shape[0]
+                and 0 < point[1] < self.edges.shape[1]
+                and self.edges[tuple(point)]
+            ]
+        )
+        fitness = 1 - white_points.shape[0] / perimeter_points.shape[0]
+        return fitness
+
+    # def evaluate(self, cells: np.ndarray) -> float:
+    #     error = 1
+    #     x0, y0, r = cells
+    #     if r < self.min_radius or r > self.max_radius:
+    #         return 2
+    #     points = 0
+    #     perimeter = self.circumference.size
+    #     x = np.int16(np.ceil(x0 + r * np.cos(self.circumference)))
+    #     y = np.int16(np.ceil(y0 + r * np.sin(self.circumference)))
+    #     for x, y in zip(x, y):
+    #         if 0 < x < self.edges.shape[0] and 0 < y < self.edges.shape[1]:
+    #             if self.edges[x][y] == 255:
+    #                 points += 1
+    #     if perimeter == 0:
+    #         return 2
+    #     error = 1 - (points / perimeter)
+    #     return error
