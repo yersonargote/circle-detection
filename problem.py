@@ -12,7 +12,6 @@ class CircleDetection:
     optimal: float
     edges: np.ndarray
     img: np.ndarray
-    circumference = np.arange(0, (2 * np.pi) + 0.1, 0.1)
 
     def select_coords(self):
         coords = np.array(np.where(self.edges == 255)).T
@@ -62,49 +61,59 @@ class CircleDetection:
         circle = np.array([x0, y0, r])
         return circle
 
-    def evaluate(self, cells: np.ndarray) -> float:
-        x0, y0, r = cells
-        if r < self.min_radius or r > self.max_radius:
-            return 2
-        perimeter_points = np.array(
-            [np.rint(x0 + r * np.cos(t)).astype(int) for t in self.circumference]
-        )
-        perimeter_points = np.stack(
-            (
-                perimeter_points,
-                np.rint(y0 + r * np.sin(self.circumference)).astype(int),
-            ),
-            axis=1,
-        )
-        perimeter_points = np.unique(
-            np.array([tuple(point) for point in perimeter_points]), axis=0
-        )
-        white_points = np.array(
-            [
-                point
-                for point in perimeter_points
-                if 0 < point[0] < self.edges.shape[0]
-                and 0 < point[1] < self.edges.shape[1]
-                and self.edges[tuple(point)]
-            ]
-        )
-        fitness = 1 - white_points.shape[0] / perimeter_points.shape[0]
-        return fitness
-
     # def evaluate(self, cells: np.ndarray) -> float:
-    #     error = 1
     #     x0, y0, r = cells
     #     if r < self.min_radius or r > self.max_radius:
     #         return 2
-    #     points = 0
-    #     perimeter = self.circumference.size
-    #     x = np.int16(np.ceil(x0 + r * np.cos(self.circumference)))
-    #     y = np.int16(np.ceil(y0 + r * np.sin(self.circumference)))
-    #     for x, y in zip(x, y):
-    #         if 0 < x < self.edges.shape[0] and 0 < y < self.edges.shape[1]:
-    #             if self.edges[x][y] == 255:
-    #                 points += 1
-    #     if perimeter == 0:
-    #         return 2
-    #     error = 1 - (points / perimeter)
-    #     return error
+    #     perimeter = int(2 * np.pi * r)
+    #     circumference = np.linspace(0, 2 * np.pi, perimeter)
+    #     perimeter_points = np.array(
+    #         [np.rint(x0 + r * np.cos(t)).astype(int) for t in circumference]
+    #     )
+    #     perimeter_points = np.stack(
+    #         (
+    #             perimeter_points,
+    #             np.rint(y0 + r * np.sin(circumference)).astype(int),
+    #         ),
+    #         axis=1,
+    #     )
+    #     perimeter_points = np.unique(
+    #         np.array([tuple(point) for point in perimeter_points]), axis=0
+    #     )
+    #     white_points = np.array(
+    #         [
+    #             point
+    #             for point in perimeter_points
+    #             if 0 < point[0] < self.edges.shape[0]
+    #             and 0 < point[1] < self.edges.shape[1]
+    #             and self.edges[tuple(point)]
+    #         ]
+    #     )
+    #     fitness = 1 - (white_points.shape[0] / perimeter_points.shape[0])
+    #     return fitness
+
+    def evaluate(self, cells: np.ndarray) -> float:
+        # coords = np.stack((x, y), axis=1)
+        # points = [
+        #     (x, y)
+        #     for x, y in coords
+        #     if 0 < x < self.edges.shape[0]
+        #     and 0 < y < self.edges.shape[1]
+        #     and self.edges[x][y]
+        # ]
+        # points = len(points)
+        error = 1
+        x0, y0, r = cells
+        if r < self.min_radius or r > self.max_radius:
+            return 2
+        perimeter = int(2 * np.pi * r)
+        circumference = np.linspace(0, 2 * np.pi, perimeter)
+        points = 0
+        x = np.ceil(x0 + r * np.cos(circumference)).astype(int)
+        y = np.ceil(y0 + r * np.sin(circumference)).astype(int)
+        for x, y in zip(x, y):
+            if 0 < x < self.edges.shape[0] and 0 < y < self.edges.shape[1]:
+                if self.edges[x][y]:
+                    points += 1
+        error = 1 - (points / perimeter)
+        return error

@@ -103,7 +103,10 @@ def main(name: str = typer.Argument("2")):
     name = "Circle Detection"
     min_radius, max_radius = (50, 200)
     optimal, size = (0.2, 3)
-    N, max_iterations = (32, 89)
+    # N, max_iterations = (171, 231)
+    # N, max_iterations = (7, 133)
+    # N, max_iterations = (32, 89)
+    N, max_iterations = (14, 133)
     # 20, 100  # 32, 89  # 14, 111 # (7, 133)  # 100, 100 # 12, 586
     problem: CircleDetection = CircleDetection(
         name=name,
