@@ -1,5 +1,6 @@
 from copy import deepcopy
 from dataclasses import dataclass
+from typing import Tuple
 
 import numpy as np
 
@@ -35,7 +36,7 @@ class GHS:
         else:
             self.BW = self.BWmin
 
-    def solve(self) -> Solution:
+    def solve(self) -> Tuple:
         self.memory = np.array([self.init_harmony() for _ in range(self.N)])
         self.memory = np.array(sorted(self.memory, reverse=False))
         best: Solution = self.memory[0]
@@ -62,6 +63,6 @@ class GHS:
                 best = deepcopy(self.memory[0])
             if np.isclose(best.fitness, self.problem.optimal):
                 solutions.append(best)
-                return np.array(solutions, best)
+                return np.array(solutions), best
             solutions.append(best.fitness)
         return np.array(solutions), best

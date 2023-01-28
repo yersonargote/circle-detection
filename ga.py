@@ -75,7 +75,7 @@ class GA:
         all = np.concatenate((self.population, population))
         self.population = np.array(sorted(all, reverse=False)[: self.N], dtype=object)
 
-    def solve(self):
+    def solve(self) -> Tuple:
         self.population = np.array(
             sorted([self.init_individual() for _ in range(self.N)])
         )
@@ -95,7 +95,7 @@ class GA:
             if self.population[0] < best:
                 best = deepcopy(self.population[0])
             if np.isclose(best.fitness, self.problem.optimal):
-                return best
+                return np.array(solutions), best
             generation += 1
             solutions.append(best.fitness)
         return np.array(solutions), best

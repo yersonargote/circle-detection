@@ -1,6 +1,6 @@
 from copy import deepcopy
 from dataclasses import dataclass
-from typing import Tuple, Union
+from typing import Tuple
 
 import numpy as np
 
@@ -57,7 +57,7 @@ class GWO:
             self.population[i].cells = np.around((X1 + X2 + X3) / 3)
             self.population[i].fitness = self.problem.evaluate(self.population[i].cells)
 
-    def solve(self):
+    def solve(self) -> Tuple:
         self.population = np.array(
             sorted(
                 [self.init_wolf() for _ in range(self.N)],
