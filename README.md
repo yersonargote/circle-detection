@@ -17,11 +17,11 @@ python main.py
 
 ```
 
-***Note***: Command is equals to `python main.py 2 100 100`
+- **Note***: Command is equals to `python main.py 2 100 100`. The default arguments are: select `2.jpg` image, `100` population size and `100` max iterations.
 
-***Note***: The default arguments are: select `2.jpg` image, `100` population size and `100` max iterations.
+- **Note**: You can add the name of image *without* `.jpg`.
 
-***Note***: You can add the name of image *without* `.jpg`.
+### Another example 
 
 ```bash
 python main.py 4 5 10
