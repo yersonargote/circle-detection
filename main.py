@@ -93,7 +93,11 @@ def show_plt(solutions: dict):
     axes.legend(loc="best")
 
 
-def main(name: str = typer.Argument("2")):
+def main(
+    name: str = typer.Argument("2"),
+    n: int = typer.Argument(100),
+    max_iterations: int = typer.Argument(100),
+):
     np.random.seed(42)
     random.seed(42)
     solutions = {}
@@ -107,8 +111,10 @@ def main(name: str = typer.Argument("2")):
     # N, max_iterations = (7, 133)
     # N, max_iterations = (32, 89)
     # N, max_iterations = (32, 89)
-    N, max_iterations = (20, 1000)
+    # N, max_iterations = (20, 1000)
     # 20, 100  # 32, 89  # 14, 111 # (7, 133)  # 100, 100 # 12, 586
+    # N, max_iterations = (75, 48)
+    N, max_iterations = n, max_iterations
     problem: CircleDetection = CircleDetection(
         name=name,
         size=size,
