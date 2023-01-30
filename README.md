@@ -14,10 +14,15 @@ pip install -r requirements.txt
 
 ```bash
 python main.py
+
 ```
 
-***Note***: You can add the name of image *without* `.jpg`, by default read `2.jpg` img.
+***Note***: Command is equals to `python main.py 2 100 100`
+
+***Note***: The default arguments are: select `2.jpg` image, `100` population size and `100` max iterations.
+
+***Note***: You can add the name of image *without* `.jpg`.
 
 ```bash
-python main.py 4
+python main.py 4 5 10
 ```

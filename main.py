@@ -86,14 +86,14 @@ def show_ind(solutions: dict, img: np.ndarray):
 
 
 def main(
-    name: str = typer.Argument("2"),
+    img: str = typer.Argument("2"),
     n: int = typer.Argument(100),
-    max_iterations: int = typer.Argument(100),
+    it: int = typer.Argument(100),
 ):
     np.random.seed(42)
     random.seed(42)
     solutions = {}
-    filename = f"{name}.jpg"
+    filename = f"{img}.jpg"
     edges = canny(filename)
     img, cimg = get_img(filename)
     name = "Circle Detection"
@@ -106,7 +106,7 @@ def main(
     # N, max_iterations = (20, 1000)
     # 20, 100  # 32, 89  # 14, 111 # (7, 133)  # 100, 100 # 12, 586
     # N, max_iterations = (75, 48)
-    N, max_iterations = n, max_iterations
+    N, max_iterations = n, it
     problem: CircleDetection = CircleDetection(
         name=name,
         size=size,
