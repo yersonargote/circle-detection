@@ -10,8 +10,6 @@ import typer
 from matplotlib import pyplot as plt
 from rich import print
 
-from ga import GA
-from ghs import GHS
 from gwo import GWO
 from problem import CircleDetection
 from solution import Solution
@@ -63,8 +61,9 @@ def show_ind(solutions: dict, img: np.ndarray):
     fig.tight_layout(pad=5.0)
 
     colors = [(255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 0)]
+    colorss = ["green", "blue", "red", "yellow"]
     it = 0
-    for name, (_, solution, t) in solutions.items():
+    for name, (x, solution, t) in solutions.items():
         circle = np.uint16(solution.cells)
         x0, y0, r = circle
         color = colors[it % len(colors)]
@@ -79,18 +78,11 @@ def show_ind(solutions: dict, img: np.ndarray):
         axs[it // 2][it % 2].set_xlabel("X axis")
         axs[it // 2][it % 2].set_ylabel("Y axis")
         it += 1
-
-
-def show_plt(solutions: dict):
-    figure, axes = plt.subplots()
-    axes.set_title("Circle Detection")
-    colors = ["green", "blue", "red", "yellow"]
-    it = 0
-    for name, values in solutions.items():
-        color = colors[it % len(colors)]
-        axes.plot(values[0], color=color, label=name)
+        axs[it // 2][it % 2].plot(x, color=colorss[it // 2])
+        axs[it // 2][it % 2].set_title(f"Circle Detection - {name}")
+        axs[it // 2][it % 2].set_xlabel("Iterations")
+        axs[it // 2][it % 2].set_ylabel("Fitness")
         it += 1
-    axes.legend(loc="best")
 
 
 def main(
@@ -164,39 +156,6 @@ def main(
     sols = np.array([])
     solutions["HCT"] = (sols, best, end_time - start_time)
 
-    # Global-Harmony Search
-    # HMCR, PAR = 0.9, 0.3
-    HMCR, PAR = 0.7, 0.3
-    BW, BWmin, BWmax = 2, 1, 5
-    ghs: GHS = GHS(
-        problem=problem,
-        max_iterations=max_iterations,
-        memory=np.empty(N, dtype=object),
-        N=N,
-        HMCR=HMCR,
-        PAR=PAR,
-        BW=BW,
-        BWmin=BWmin,
-        BWmax=BWmax,
-    )
-    start = time.perf_counter()
-    sols, best = ghs.solve()
-    end = time.perf_counter()
-    solutions["GHS"] = (sols, best, end - start)
-
-    # GA
-    ga = GA(
-        N=N,
-        generations=max_iterations,
-        problem=problem,
-        population=np.empty(shape=N, dtype=object),
-        opponents=2,
-    )
-    start = time.perf_counter()
-    sols, best = ga.solve()
-    end = time.perf_counter()
-    solutions["GA"] = (sols, best, end - start)
-
     # Benchmarking
     for name, (sols, best, tme) in solutions.items():
         print(f"{name} - Time: {tme}")
@@ -209,7 +168,6 @@ def main(
         np.copy(cimg),
     )
     show_ind(solutions, np.copy(cimg))
-    show_plt(solutions)
     plt.show()
 
 
