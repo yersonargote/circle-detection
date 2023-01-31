@@ -55,21 +55,20 @@ class CircleDetection:
         y0 = n2 // d
 
         # Calculate the radius of the circle
-        r = np.around(np.sqrt((x0 - xi) ** 2 + (y0 - yi) ** 2))
+        r = np.sqrt((x0 - xi) ** 2 + (y0 - yi) ** 2)
         circle = np.array([x0, y0, r])
         return circle
 
     def evaluate(self, cells: np.ndarray) -> float:
-        error = 1
         x0, y0, r = cells
         if r < self.min_radius or r > self.max_radius:
             return 2
         perimeter = int(2 * np.pi * r)
         circumference = np.linspace(0, 2 * np.pi, perimeter)
         points = 0
-        x = np.ceil(x0 + r * np.cos(circumference)).astype(int)
-        y = np.ceil(y0 + r * np.sin(circumference)).astype(int)
-        for x, y in zip(x, y):
+        x = (x0 + r * np.cos(circumference)).astype(int)
+        y = (y0 + r * np.sin(circumference)).astype(int)
+        for x, y in zip(y, x):
             if 0 < x < self.edges.shape[0] and 0 < y < self.edges.shape[1]:
                 if self.edges[x][y]:
                     points += 1
