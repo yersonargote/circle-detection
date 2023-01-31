@@ -17,8 +17,8 @@ from solution import Solution
 
 def canny(filename: str):
     img = cv.imread(filename, 0)
-    edges = cv.Canny(img, 50, 50)
-    # edges = cv.Canny(img, 100, 200)
+    # edges = cv.Canny(img, 50, 50)
+    edges = cv.Canny(img, 100, 200)
     return edges
 
 
@@ -99,11 +99,7 @@ def main(
     name = "Circle Detection"
     min_radius, max_radius = (50, 200)
     optimal, size = (0.2, 3)
-    # N, max_iterations = (171, 231)
-    # N, max_iterations = (7, 133)
-    # N, max_iterations = (32, 89)
-    # N, max_iterations = (32, 89)
-    # N, max_iterations = (20, 1000)
+    # 17, 153
     # 20, 100  # 32, 89  # 14, 111 # (7, 133)  # 100, 100 # 12, 586
     # N, max_iterations = (75, 48)
     N, max_iterations = n, it
@@ -167,6 +163,12 @@ def main(
         np.copy(edges),
         np.copy(cimg),
     )
+    show(
+        np.array([solution.cells for solution in gwo.population]),
+        np.copy(edges),
+        np.copy(cimg),
+    )
+    show(circles[0], np.copy(edges), np.copy(cimg))
     show_ind(solutions, np.copy(cimg))
     plt.show()
 
