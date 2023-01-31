@@ -55,7 +55,8 @@ class CircleDetection:
         y0 = n2 // d
 
         # Calculate the radius of the circle
-        r = np.sqrt((x0 - xi) ** 2 + (y0 - yi) ** 2)
+        # r = np.sqrt((x0 - xi) ** 2 + (y0 - yi) ** 2)
+        r = np.around(np.sqrt((x0 - xi) ** 2 + (y0 - yi) ** 2))
         circle = np.array([x0, y0, r])
         return circle
 

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""GWO-CircleDetection.ipynb"""
+"""GWO CircleDetection"""
 
 import random
 import time
@@ -87,10 +87,11 @@ def show_ind(solutions: dict, img: np.ndarray):
 
 def main(
     img: str = typer.Argument("2"),
-    n: int = typer.Argument(100),
-    it: int = typer.Argument(100),
+    n: int = typer.Argument(50),
+    it: int = typer.Argument(150),
 ):
     np.random.seed(42)
+    random.seed(42)
     solutions = {}
     filename = f"{img}.jpg"
     edges = canny(filename)
@@ -116,17 +117,19 @@ def main(
         max_iterations=max_iterations,
         N=N,
         problem=problem,
-        population=np.empty(shape=N, dtype=object),
+        population=[],
         a=0,
         alpha=Solution(np.zeros(size), np.Inf),
         beta=Solution(np.zeros(size), np.Inf),
         delta=Solution(np.zeros(size), np.Inf),
+        convergence=np.zeros(max_iterations),
     )
 
     # Grey Wolf Optimizer
     start_time = time.perf_counter()
-    sols, best = gwo.solve()
+    best = gwo.solve()
     end_time = time.perf_counter()
+    sols = gwo.convergence
     solutions["GWO"] = (sols, best, end_time - start_time)
 
     # Hough Circle Transform
@@ -142,14 +145,13 @@ def main(
         maxRadius=max_radius,
     )
     end_time = time.perf_counter()
-    cells = np.array(np.around(circles[0, 0]))
-
-    best = Solution(
-        cells=cells,
-        fitness=problem.evaluate(cells),
-    )
+    bests = []
+    for circle in circles[0]:
+        fitness = problem.evaluate(circle)
+        bests.append(Solution(cells=circle, fitness=fitness))
+    bests = sorted(bests)[:10]
     sols = np.array([])
-    solutions["HCT"] = (sols, best, end_time - start_time)
+    solutions["HCT"] = (sols, bests[0], end_time - start_time)
 
     # Benchmarking
     for name, (sols, best, tme) in solutions.items():
@@ -167,7 +169,11 @@ def main(
         np.copy(edges),
         np.copy(cimg),
     )
-    show(circles[0], np.copy(edges), np.copy(cimg))
+    show(
+        np.array([solution.cells for solution in bests]),
+        np.copy(edges),
+        np.copy(cimg),
+    )
     show_ind(solutions, np.copy(cimg))
     plt.show()
 

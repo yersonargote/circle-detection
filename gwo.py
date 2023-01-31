@@ -1,6 +1,6 @@
 from copy import deepcopy
 from dataclasses import dataclass
-from typing import Tuple
+from typing import List
 
 import numpy as np
 
@@ -15,11 +15,12 @@ class GWO:
     max_iterations: int
     N: int
     problem: CircleDetection
-    population: np.ndarray
+    population: List[Solution]
     a: float
     alpha: Solution
     beta: Solution
     delta: Solution
+    convergence: np.ndarray
 
     def init_wolf(self):
         cells = self.problem.circle()
@@ -54,29 +55,25 @@ class GWO:
             D_delta = np.abs(C3 * self.delta.cells - self.population[i].cells)
             X3 = self.delta.cells - A3 * D_delta
 
-            self.population[i].cells = np.around((X1 + X2 + X3) / 3)
+            # self.population[i].cells = np.around((X1 + X2 + X3) / 3)
+            self.population[i].cells = (X1 + X2 + X3) // 3
             self.population[i].fitness = self.problem.evaluate(self.population[i].cells)
 
-    def solve(self) -> Tuple:
-        self.population = np.array(
-            sorted(
-                [self.init_wolf() for _ in range(self.N)],
-                reverse=False,
-            )
-        )
+    def solve(self) -> Solution:
+        self.population = sorted([self.init_wolf() for _ in range(self.N)])
         self.update_alpha_beta_delta()
         best: Solution = deepcopy(self.alpha)
         it = 0
-        solutions = []
         while it < self.max_iterations:
             self.a = 2 - it * ((2) / self.max_iterations)
+            # self.a = 2 - 2 * np.square(it / self.max_iterations)
             self.update_population()
-            self.population = np.array(sorted(self.population, reverse=False))
+            self.population = sorted(self.population)
             self.update_alpha_beta_delta()
-            it += 1
-            if self.alpha < best:
+            if self.alpha.fitness < best.fitness:
                 best = deepcopy(self.alpha)
+            self.convergence[it] = best.fitness
             if np.isclose(best.fitness, self.problem.optimal):
-                return np.array(solutions), best
-            solutions.append(best.fitness)
-        return np.array(solutions), best
+                return best
+            it += 1
+        return best
