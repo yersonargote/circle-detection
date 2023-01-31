@@ -91,14 +91,13 @@ def main(
     it: int = typer.Argument(100),
 ):
     np.random.seed(42)
-    random.seed(42)
     solutions = {}
     filename = f"{img}.jpg"
     edges = canny(filename)
     img, cimg = get_img(filename)
     name = "Circle Detection"
     min_radius, max_radius = (50, 200)
-    optimal, size = (0.2, 3)
+    optimal, size = (0.0, 3)
     # 17, 153
     # 20, 100  # 32, 89  # 14, 111 # (7, 133)  # 100, 100 # 12, 586
     # N, max_iterations = (75, 48)
