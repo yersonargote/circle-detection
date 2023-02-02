@@ -1,6 +1,5 @@
 from copy import deepcopy
 from dataclasses import dataclass
-from typing import List
 
 import numpy as np
 
@@ -22,7 +21,7 @@ class GWO:
     delta: Solution
     convergence: np.ndarray
 
-    def init_pop(self):
+    def init_population(self):
         for i in range(self.N):
             self.population[i] = self.init_wolf()
 
@@ -32,6 +31,7 @@ class GWO:
         return Solution(cells=cells, fitness=fitness)
 
     def update_alpha_beta_delta(self):
+        self.population = np.sort(self.population)
         self.alpha = self.population[0]
         self.beta = self.population[1]
         self.delta = self.population[2]
@@ -64,17 +64,16 @@ class GWO:
             self.population[i].fitness = self.problem.evaluate(self.population[i].cells)
 
     def solve(self) -> Solution:
-        self.init_pop()
+        self.init_population()
         self.update_alpha_beta_delta()
         best: Solution = deepcopy(self.alpha)
         it = 0
         while it < self.max_iterations:
-            self.a = 2 - it * ((2) / self.max_iterations)
-            # self.a = 2 - 2 * np.square(it / self.max_iterations)
+            # self.a = 2 - it * ((2) / self.max_iterations)
+            self.a = 2 - 2 * np.square(it / self.max_iterations)
             self.update_population()
-            self.population = np.sort(self.population)
             self.update_alpha_beta_delta()
-            if self.alpha.fitness < best.fitness:
+            if self.alpha < best:
                 best = deepcopy(self.alpha)
             self.convergence[it] = best.fitness
             if np.isclose(best.fitness, self.problem.optimal):
