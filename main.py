@@ -117,7 +117,7 @@ def main(
         max_iterations=max_iterations,
         N=N,
         problem=problem,
-        population=[],
+        population=np.empty(shape=(N,), dtype=object),
         a=0,
         alpha=Solution(np.zeros(size), np.Inf),
         beta=Solution(np.zeros(size), np.Inf),

@@ -15,12 +15,16 @@ class GWO:
     max_iterations: int
     N: int
     problem: CircleDetection
-    population: List[Solution]
+    population: np.ndarray
     a: float
     alpha: Solution
     beta: Solution
     delta: Solution
     convergence: np.ndarray
+
+    def init_pop(self):
+        for i in range(self.N):
+            self.population[i] = self.init_wolf()
 
     def init_wolf(self):
         cells = self.problem.circle()
@@ -60,7 +64,7 @@ class GWO:
             self.population[i].fitness = self.problem.evaluate(self.population[i].cells)
 
     def solve(self) -> Solution:
-        self.population = sorted([self.init_wolf() for _ in range(self.N)])
+        self.init_pop()
         self.update_alpha_beta_delta()
         best: Solution = deepcopy(self.alpha)
         it = 0
@@ -68,7 +72,7 @@ class GWO:
             self.a = 2 - it * ((2) / self.max_iterations)
             # self.a = 2 - 2 * np.square(it / self.max_iterations)
             self.update_population()
-            self.population = sorted(self.population)
+            self.population = np.sort(self.population)
             self.update_alpha_beta_delta()
             if self.alpha.fitness < best.fitness:
                 best = deepcopy(self.alpha)
