@@ -21,9 +21,22 @@ class GWO:
     delta: Solution
     convergence: np.ndarray
 
+    # def init_population(self):
+    #     it = 0
+    #     while it < self.N:
+    #         wolf: Solution = self.init_wolf()
+    #         if wolf.fitness > 1:
+    #             continue
+    #         self.population[it] = wolf
+    #         it += 1
+
     def init_population(self):
         for i in range(self.N):
             self.population[i] = self.init_wolf()
+        # for ind in np.nditer(
+        #     self.population, flags=["refs_ok"], op_flags=["readwrite"]
+        # ):
+        #     ind[...] = self.init_wolf()
 
     def init_wolf(self):
         cells = self.problem.circle()

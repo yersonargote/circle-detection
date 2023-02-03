@@ -61,7 +61,7 @@ def show_ind(solutions: dict, img: np.ndarray):
     fig.tight_layout(pad=5.0)
 
     colors = [(255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 0)]
-    colorss = ["green", "blue", "red", "yellow"]
+    colorss = ["red", "green", "blue", "yellow"]
     it = 0
     for name, (x, solution, t) in solutions.items():
         circle = np.uint16(solution.cells)
@@ -73,22 +73,29 @@ def show_ind(solutions: dict, img: np.ndarray):
 
         axs[it // 2][it % 2].imshow(cimg)
         axs[it // 2][it % 2].set_title(
-            f"{name} | Fitness: {solution.fitness} | Circle {solution.cells} | Time {t}"
+            f"{name} | Fitness: {solution.fitness} | Circle {solution.cells}\nTime {t}"
         )
         axs[it // 2][it % 2].set_xlabel("X axis")
         axs[it // 2][it % 2].set_ylabel("Y axis")
         it += 1
-        axs[it // 2][it % 2].plot(x, color=colorss[it // 2])
-        axs[it // 2][it % 2].set_title(f"Circle Detection - {name}")
-        axs[it // 2][it % 2].set_xlabel("Iterations")
-        axs[it // 2][it % 2].set_ylabel("Fitness")
-        it += 1
+
+    (x, solution, t) = solutions["GWO"]
+
+    axs[1][0].plot(x, color=colorss[0])
+    axs[1][0].set_title("GWO - Plot")
+    axs[1][0].set_xlabel("Iterations")
+    axs[1][0].set_ylabel("Fitness")
+
+    axs[1][1].boxplot(x)
+    axs[1][1].set_title("GWO - Boxplot")
+    axs[1][1].set_xlabel("")
+    axs[1][1].set_ylabel("")
 
 
 def main(
     img: str = typer.Argument("2"),
     n: int = typer.Argument(50),
-    it: int = typer.Argument(150),
+    it: int = typer.Argument(250),
 ):
     np.random.seed(42)
     random.seed(42)
@@ -160,7 +167,7 @@ def main(
         print(f"Fitness: {best.fitness} - Valid: {valid}")
         print(f"{best.cells}")
     show(
-        np.array([solution[1].cells for solution in solutions.values()]),
+        np.array([solution.cells for _, solution, _ in solutions.values()]),
         np.copy(edges),
         np.copy(cimg),
     )

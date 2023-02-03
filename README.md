@@ -17,9 +17,9 @@ python main.py
 
 ```
 
-- **Note**: Command is equals to `python main.py 2 100 100`.
+- **Note**: Command is equals to `python main.py 2 50 250`.
 
-The default arguments are select `2.jpg` image, `100` population size and `100` max iterates.
+The default arguments are select `2.jpg` image, `50` population size and `250` max iterates.
 
 - **Note**: You can add the name of image *without* `.jpg`.
 
