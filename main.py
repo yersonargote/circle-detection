@@ -82,12 +82,18 @@ def show_ind(solutions: dict, img: np.ndarray):
     (x, solution, t) = solutions["GWO"]
 
     axs[1][0].plot(x, color=colorss[0])
-    axs[1][0].set_title("GWO - Plot")
+    axs[1][0].set_title(
+        f"""GWO - Plot
+        Min {np.min(x)} - Max {np.max(x)}"""
+    )
     axs[1][0].set_xlabel("Iterations")
     axs[1][0].set_ylabel("Fitness")
 
     axs[1][1].boxplot(x)
-    axs[1][1].set_title("GWO - Boxplot")
+    axs[1][1].set_title(
+        f"""GWO - Boxplot
+        Mean: {np.mean(x)} - std: {np.std(x)}"""
+    )
     axs[1][1].set_xlabel("")
     axs[1][1].set_ylabel("")
 
