@@ -61,7 +61,6 @@ class CircleDetection:
         return circle
 
     def evaluate(self, cells: np.ndarray) -> float:
-        error = 1
         x0, y0, r = cells
         if r < self.min_radius or r > self.max_radius:
             return 2

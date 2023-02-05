@@ -144,6 +144,12 @@ def main(
     end_time = time.perf_counter()
     sols = gwo.convergence
     solutions["GWO"] = (sols, best, end_time - start_time)
+    print(f"{name} - Time: {end_time - start_time}")
+    valid = np.isclose(problem.evaluate(best.cells), best.fitness)
+    print(f"Fitness: {best.fitness} - Valid: {valid}")
+    print(f"{best.cells}")
+    print(f"Mean {np.mean(sols)} - Std: {np.mean(sols)}")
+    print(f"Min {np.min(sols)} - Max: {np.max(sols)}")
 
     # Hough Circle Transform
     start_time = time.perf_counter()
@@ -165,13 +171,11 @@ def main(
     bests = sorted(bests)[:10]
     sols = np.array([])
     solutions["HCT"] = (sols, bests[0], end_time - start_time)
+    print(f"{name} - Time: {end_time - start_time}")
+    valid = np.isclose(problem.evaluate(bests[0].cells), bests[0].fitness)
+    print(f"Fitness: {bests[0].fitness} - Valid: {valid}")
+    print(f"{bests[0].cells}")
 
-    # Benchmarking
-    for name, (sols, best, tme) in solutions.items():
-        print(f"{name} - Time: {tme}")
-        valid = np.isclose(problem.evaluate(best.cells), best.fitness)
-        print(f"Fitness: {best.fitness} - Valid: {valid}")
-        print(f"{best.cells}")
     show(
         np.array([solution.cells for _, solution, _ in solutions.values()]),
         np.copy(edges),
