@@ -148,7 +148,7 @@ def main(
     valid = np.isclose(problem.evaluate(best.cells), best.fitness)
     print(f"Fitness: {best.fitness} - Valid: {valid}")
     print(f"{best.cells}")
-    print(f"Mean {np.mean(sols)} - Std: {np.mean(sols)}")
+    print(f"Mean {np.mean(sols)} - Std: {np.std(sols)}")
     print(f"Min {np.min(sols)} - Max: {np.max(sols)}")
 
     # Hough Circle Transform
