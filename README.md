@@ -19,14 +19,14 @@ python main.py
 
 - **Note**: Command is equals to `python main.py 2 50 250`.
 
-The default arguments are select `2.jpg` image, `50` population size and `250` max iterates.
+The default arguments are select `2.jpg` image with `50` population size and `250` max iterates.
 
 - **Note**: You can add the name of image *without* `.jpg`.
 
 ### Another example 
 
 ```bash
-python main.py 4 5 10
+python main.py 1 40 100
 ```
 
 ## For more info
