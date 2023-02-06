@@ -28,3 +28,9 @@ The default arguments are select `2.jpg` image, `50` population size and `250` m
 ```bash
 python main.py 4 5 10
 ```
+
+## For more info
+
+```bash
+python main.py --help
+```

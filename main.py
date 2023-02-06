@@ -99,9 +99,18 @@ def show_ind(solutions: dict, img: np.ndarray):
 
 
 def main(
-    img: str = typer.Argument("2"),
-    n: int = typer.Argument(50),
-    it: int = typer.Argument(250),
+    img: str = typer.Argument(
+        "2",
+        help="This is the image in which we are searching for the circle",
+    ),
+    n: int = typer.Argument(
+        50,
+        help="This is the population size",
+    ),
+    it: int = typer.Argument(
+        250,
+        help="This is the number of iterations",
+    ),
 ):
     np.random.seed(42)
     random.seed(42)
