@@ -14,8 +14,11 @@ pip install -r requirements.txt
 
 ```bash
 python main.py
-
 ```
+
+***Warning***: In linux install tkinter.
+
+- **Note**: In Debian/Ubuntu do `sudo apt install python3-tk`.
 
 - **Note**: Command is equals to `python main.py 2 50 250`.
 
